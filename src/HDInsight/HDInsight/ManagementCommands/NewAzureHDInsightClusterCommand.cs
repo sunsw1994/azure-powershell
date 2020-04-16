@@ -358,6 +358,23 @@ namespace Microsoft.Azure.Commands.HDInsight
         [Parameter(HelpMessage = "Gets or sets the minimal supported TLS version.")]
         public string MinSupportedTlsVersion { get; set; }
 
+        [Parameter(HelpMessage = "Gets or sets the assigned identity.")]
+        public string  AssignedIdentity { get; set; }
+
+        [Parameter(HelpMessage = "Gets or sets the encryption algorithm.")]
+        [ValidateSet("RSA-OAEP", "RSA-OAEP-256", "RSA1_5")]
+        public string EncryptionAlgorithm { get; set; }
+
+        [Parameter(HelpMessage = "Gets or sets the encryption key name.")]
+        public string EncryptionKeyName { get; set; }
+
+        [Parameter(HelpMessage = "Gets or sets the encryption key version.")]
+        public string EncryptionKeyVersion { get; set; }
+
+        [Parameter(HelpMessage = "Gets or sets the encryption vault uri.")]
+        public string EncryptionVaultUri { get; set; }
+
+
         #endregion
 
 
@@ -475,6 +492,26 @@ namespace Microsoft.Azure.Commands.HDInsight
                     {
                         DisksPerNode = DisksPerWorkerNode
                     }
+                };
+            }
+
+            if (EncryptionKeyName != null && EncryptionKeyVersion != null && EncryptionVaultUri !=null && AssignedIdentity != null)
+            {
+                parameters.ClusterIdentity = new ClusterIdentity
+                {
+                    Type = ResourceIdentityType.UserAssigned,
+                    UserAssignedIdentities = new Dictionary<string, ClusterIdentityUserAssignedIdentitiesValue>
+                    {
+                        { AssignedIdentity, new ClusterIdentityUserAssignedIdentitiesValue() }
+                    }
+                };
+                parameters.DiskEncryptionProperties = new DiskEncryptionProperties()
+                {
+                    KeyName = EncryptionKeyName,
+                    KeyVersion = EncryptionKeyVersion,
+                    VaultUri = EncryptionVaultUri,
+                    EncryptionAlgorithm = EncryptionAlgorithm !=null ? EncryptionAlgorithm : "RSA-OAEP",
+                    MsiResourceId = AssignedIdentity
                 };
             }
 

@@ -21,6 +21,7 @@
 
 ## Version 3.1.0
 * Supported specifying minimal supported TLS version when creating cluster.
+* Supported Customer-managed key disk encryption.
 
 ## Version 3.0.3
 * Fix document error of New-AzHDInsightCluster.
