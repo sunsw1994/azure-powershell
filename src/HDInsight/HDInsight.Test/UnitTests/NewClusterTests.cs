@@ -465,10 +465,10 @@ namespace Microsoft.Azure.Commands.HDInsight.Test
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void CanCreateNewHDInsightCluster_Disk_Encryption()
         {
-            string AssignedIdentity = "/subscriptions/964c10bb-8a6c-43bc-83d3-6b318c6c7305/resourcegroups/group-ps-test9322/providers/microsoft.managedidentity/userassignedidentities/ami-ps-cmktest3791";
-            string EncryptionVaultUri = "https://vault-ps-cmktest9118.vault.azure.net:443";
-            string EncryptionKeyVersion = "20eaeea45bf44310aba9b13d6f068b71";
-            string EncryptionKeyName = "key-ps-cmktest3577";
+            string AssignedIdentity = "/subscriptions/00000000-aaaa-bbbb-cccc-dddddddddddd/resourcegroups/group-unittest/providers/microsoft.managedidentity/userassignedidentities/ami-unittest";
+            string EncryptionVaultUri = "https://vault-unittest.vault.azure.net:443";
+            string EncryptionKeyVersion = "00000000000000000000000000000000";
+            string EncryptionKeyName = "key-unittest";
             string EncryptionAlgorithm = "RSA-OAEP";
             string sparkClusterType = "Spark";
 

@@ -137,7 +137,12 @@ namespace Microsoft.Azure.Commands.HDInsight
                     CertificatePassword = CertificatePassword,
                     SecurityProfile = SecurityProfile,
                     DisksPerWorkerNode = DisksPerWorkerNode,
-                    MinSupportedTlsVersion = MinSupportedTlsVersion
+                    MinSupportedTlsVersion = MinSupportedTlsVersion,
+                    AssignedIdentity = AssignedIdentity,
+                    EncryptionAlgorithm = EncryptionAlgorithm,
+                    EncryptionKeyName = EncryptionKeyName,
+                    EncryptionKeyVersion = EncryptionKeyVersion,
+                    EncryptionVaultUri = EncryptionVaultUri
                 };
                 foreach (
                     var storageAccount in
@@ -192,6 +197,11 @@ namespace Microsoft.Azure.Commands.HDInsight
                 SecurityProfile = value.SecurityProfile;
                 DisksPerWorkerNode = value.DisksPerWorkerNode;
                 MinSupportedTlsVersion = value.MinSupportedTlsVersion;
+                AssignedIdentity = value.AssignedIdentity;
+                EncryptionAlgorithm = value.EncryptionAlgorithm;
+                EncryptionKeyName = value.EncryptionKeyName;
+                EncryptionKeyVersion = value.EncryptionKeyVersion;
+                EncryptionVaultUri = value.EncryptionVaultUri;
 
                 foreach (
                     var storageAccount in
@@ -362,7 +372,7 @@ namespace Microsoft.Azure.Commands.HDInsight
         public string  AssignedIdentity { get; set; }
 
         [Parameter(HelpMessage = "Gets or sets the encryption algorithm.")]
-        [ValidateSet("RSA-OAEP", "RSA-OAEP-256", "RSA1_5")]
+        [ValidateSet(JsonWebKeyEncryptionAlgorithm.RSAOAEP, JsonWebKeyEncryptionAlgorithm.RSAOAEP256, JsonWebKeyEncryptionAlgorithm.RSA15)]
         public string EncryptionAlgorithm { get; set; }
 
         [Parameter(HelpMessage = "Gets or sets the encryption key name.")]
@@ -510,7 +520,7 @@ namespace Microsoft.Azure.Commands.HDInsight
                     KeyName = EncryptionKeyName,
                     KeyVersion = EncryptionKeyVersion,
                     VaultUri = EncryptionVaultUri,
-                    EncryptionAlgorithm = EncryptionAlgorithm !=null ? EncryptionAlgorithm : "RSA-OAEP",
+                    EncryptionAlgorithm = EncryptionAlgorithm != null ? EncryptionAlgorithm : JsonWebKeyEncryptionAlgorithm.RSAOAEP,
                     MsiResourceId = AssignedIdentity
                 };
             }
