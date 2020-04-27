@@ -18,17 +18,24 @@ using Microsoft.Azure.Commands.ResourceManager.Common.ArgumentCompleters;
 using Microsoft.Azure.Management.HDInsight.Models;
 using System.Linq;
 using System.Management.Automation;
+using Microsoft.WindowsAzure.Commands.Utilities.Common;
+using Microsoft.Azure.Management.Internal.Resources.Utilities.Models;
 
 namespace Microsoft.Azure.Commands.HDInsight
 {
     [Cmdlet("Set", ResourceManager.Common.AzureRMConstants.AzureRMPrefix + "HDInsightClusterDiskEncryptionKey"),OutputType(typeof(Cluster))]
     public class SetAzureHDInsightClusterDiskEncryptionKeyCommand : HDInsightCmdletBase
     {
+        private const string SetByNameParameterSet = "SetByNameParameterSet";
+        private const string SetByResourceIdParameterSet = "SetByResourceIdParameterSet";
+        private const string SetByInputObjectParameterSet = "SetByInputObjectParameterSet";
+
         #region Input Parameter Definitions
 
         [Parameter(
             Position = 0,
             Mandatory = true,
+            ParameterSetName = SetByNameParameterSet,
             HelpMessage = "Gets or sets the encryption key name.")]
         public string EncryptionKeyName { get; set; }
 
@@ -47,8 +54,26 @@ namespace Microsoft.Azure.Commands.HDInsight
         [Parameter(
             Position = 3,
             Mandatory = true,
+            ParameterSetName = SetByNameParameterSet,
             HelpMessage = "Gets or sets the name of the cluster.")]
+        [ValidateNotNullOrEmpty]
         public string ClusterName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = SetByResourceIdParameterSet,
+            HelpMessage = "Gets or sets the resource id.")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipeline = true,
+            ParameterSetName = SetByInputObjectParameterSet,
+            HelpMessage = "Gets or sets the input object.")]
+        [ValidateNotNull]
+        public AzureHDInsightCluster InputObject { get; set; }
 
         [Parameter(
             Position = 4,
@@ -61,6 +86,19 @@ namespace Microsoft.Azure.Commands.HDInsight
 
         public override void ExecuteCmdlet()
         {
+            if (this.IsParameterBound(c => c.ResourceId))
+            {
+                var resourceIdentifier = new ResourceIdentifier(ResourceId);
+                this.ClusterName = resourceIdentifier.ResourceName;
+                this.ResourceGroupName = resourceIdentifier.ResourceGroupName;
+            }
+
+            if (this.IsParameterBound(c => c.InputObject))
+            {
+                this.ClusterName = this.InputObject.Name;
+                this.ResourceGroupName = this.InputObject.ResourceGroup;
+            }
+
             if (ResourceGroupName == null)
             {
                 ResourceGroupName = GetResourceGroupByAccountName(ClusterName);

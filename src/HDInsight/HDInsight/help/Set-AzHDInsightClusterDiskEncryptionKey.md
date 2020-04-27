@@ -12,10 +12,25 @@ Rotate the disk encryption key of the specified HDInsight cluster.
 
 ## SYNTAX
 
+### SetByNameParameterSet
 ```
 Set-AzHDInsightClusterDiskEncryptionKey [-EncryptionKeyName] <String> [-EncryptionKeyVersion] <String>
  [-EncryptionVaultUri] <String> [-ClusterName] <String> [-ResourceGroupName] <String>
  [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
+```
+
+### SetByResourceIdParameterSet
+```
+Set-AzHDInsightClusterDiskEncryptionKey [-EncryptionKeyVersion] <String> [-EncryptionVaultUri] <String>
+ -ResourceId <String> [-ResourceGroupName] <String> [-DefaultProfile <IAzureContextContainer>]
+ [<CommonParameters>]
+```
+
+### SetByInputObjectParameterSet
+```
+Set-AzHDInsightClusterDiskEncryptionKey [-EncryptionKeyVersion] <String> [-EncryptionVaultUri] <String>
+ -InputObject <AzureHDInsightCluster> [-ResourceGroupName] <String> [-DefaultProfile <IAzureContextContainer>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,14 +52,26 @@ Set-AzHDInsightClusterDiskEncryptionKey `
 		-EncryptionKeyVersion 00000000000000000000000000000000
 ```
 
+### Example 2
+```powershell
+PS C:\> # Cluster configuration info
+        $clusterName = "your-cmk-cluster"
+
+Get-AzHDInsightCluster -ClusterName $clusterName | `
+			Set-AzHDInsightClusterDiskEncryptionKey `
+				-EncryptionKeyName new-key `
+				-EncryptionVaultUri https://MyKeyVault.vault.azure.net `
+				-EncryptionKeyVersion 00000000000000000000000000000000
+```
+
 ## PARAMETERS
 
 ### -ClusterName
 Gets or sets the name of the cluster.
 
 ```yaml
-Type: String
-Parameter Sets: (All)
+Type: System.String
+Parameter Sets: SetByNameParameterSet
 Aliases:
 
 Required: True
@@ -58,7 +85,7 @@ Accept wildcard characters: False
 The credentials, account, tenant, and subscription used for communication with Azure.
 
 ```yaml
-Type: IAzureContextContainer
+Type: Microsoft.Azure.Commands.Common.Authentication.Abstractions.Core.IAzureContextContainer
 Parameter Sets: (All)
 Aliases: AzContext, AzureRmContext, AzureCredential
 
@@ -73,8 +100,8 @@ Accept wildcard characters: False
 Gets or sets the encryption key name.
 
 ```yaml
-Type: String
-Parameter Sets: (All)
+Type: System.String
+Parameter Sets: SetByNameParameterSet
 Aliases:
 
 Required: True
@@ -88,7 +115,7 @@ Accept wildcard characters: False
 Gets or sets the encryption key version.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -103,7 +130,7 @@ Accept wildcard characters: False
 Gets or sets the encryption vault uri.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -114,11 +141,26 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -InputObject
+Gets or sets the input object.
+
+```yaml
+Type: Microsoft.Azure.Commands.HDInsight.Models.AzureHDInsightCluster
+Parameter Sets: SetByInputObjectParameterSet
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
 ### -ResourceGroupName
 Gets or sets the name of the resource group.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -126,6 +168,21 @@ Required: True
 Position: 4
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceId
+Gets or sets the resource id.
+
+```yaml
+Type: System.String
+Parameter Sets: SetByResourceIdParameterSet
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -143,4 +200,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
 [Customer-managed key disk encryption](https://docs.microsoft.com/en-us/azure/hdinsight/disk-encryption)
