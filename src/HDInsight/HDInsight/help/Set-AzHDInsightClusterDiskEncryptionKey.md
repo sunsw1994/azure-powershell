@@ -15,22 +15,20 @@ Rotate the disk encryption key of the specified HDInsight cluster.
 ### SetByNameParameterSet
 ```
 Set-AzHDInsightClusterDiskEncryptionKey [-EncryptionKeyName] <String> [-EncryptionKeyVersion] <String>
- [-EncryptionVaultUri] <String> [-ClusterName] <String> [-ResourceGroupName] <String>
+ [-EncryptionVaultUri] <String> [-Name] <String> [-ResourceGroupName] <String>
  [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ### SetByResourceIdParameterSet
 ```
 Set-AzHDInsightClusterDiskEncryptionKey [-EncryptionKeyVersion] <String> [-EncryptionVaultUri] <String>
- -ResourceId <String> [-ResourceGroupName] <String> [-DefaultProfile <IAzureContextContainer>]
- [<CommonParameters>]
+ -ResourceId <String> [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ### SetByInputObjectParameterSet
 ```
 Set-AzHDInsightClusterDiskEncryptionKey [-EncryptionKeyVersion] <String> [-EncryptionVaultUri] <String>
- -InputObject <AzureHDInsightCluster> [-ResourceGroupName] <String> [-DefaultProfile <IAzureContextContainer>]
- [<CommonParameters>]
+ -InputObject <AzureHDInsightCluster> [-DefaultProfile <IAzureContextContainer>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -57,29 +55,14 @@ Set-AzHDInsightClusterDiskEncryptionKey `
 PS C:\> # Cluster configuration info
         $clusterName = "your-cmk-cluster"
 
-Get-AzHDInsightCluster -ClusterName $clusterName | `
-			Set-AzHDInsightClusterDiskEncryptionKey `
-				-EncryptionKeyName new-key `
-				-EncryptionVaultUri https://MyKeyVault.vault.azure.net `
-				-EncryptionKeyVersion 00000000000000000000000000000000
+$cluster= Get-AzHDInsightCluster -ClusterName $clusterName 
+$cluster |  Set-AzHDInsightClusterDiskEncryptionKey `
+    -EncryptionKeyName new-key `
+    -EncryptionVaultUri https://MyKeyVault.vault.azure.net `
+    -EncryptionKeyVersion 00000000000000000000000000000000
 ```
 
 ## PARAMETERS
-
-### -ClusterName
-Gets or sets the name of the cluster.
-
-```yaml
-Type: System.String
-Parameter Sets: SetByNameParameterSet
-Aliases:
-
-Required: True
-Position: 3
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -DefaultProfile
 The credentials, account, tenant, and subscription used for communication with Azure.
@@ -156,12 +139,27 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -Name
+Gets or sets the name of the cluster.
+
+```yaml
+Type: System.String
+Parameter Sets: SetByNameParameterSet
+Aliases: ClusterName
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ResourceGroupName
 Gets or sets the name of the resource group.
 
 ```yaml
 Type: System.String
-Parameter Sets: (All)
+Parameter Sets: SetByNameParameterSet
 Aliases:
 
 Required: True

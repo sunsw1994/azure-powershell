@@ -36,30 +36,21 @@ namespace Microsoft.Azure.Commands.HDInsight
             Position = 0,
             Mandatory = true,
             ParameterSetName = SetByNameParameterSet,
-            HelpMessage = "Gets or sets the encryption key name.")]
-        public string EncryptionKeyName { get; set; }
+            HelpMessage = "Gets or sets the name of the resource group.")]
+        [ResourceGroupCompleter]
+        public string ResourceGroupName { get; set; }
 
+        [Alias("ClusterName")]
         [Parameter(
             Position = 1,
-            Mandatory = true,
-            HelpMessage = "Gets or sets the encryption key version.")]
-        public string EncryptionKeyVersion { get; set; }
-
-        [Parameter(
-            Position = 2,
-            Mandatory = true,
-            HelpMessage = "Gets or sets the encryption vault uri.")]
-        public string EncryptionVaultUri { get; set; }
-
-        [Parameter(
-            Position = 3,
             Mandatory = true,
             ParameterSetName = SetByNameParameterSet,
             HelpMessage = "Gets or sets the name of the cluster.")]
         [ValidateNotNullOrEmpty]
-        public string ClusterName { get; set; }
+        public string Name { get; set; }
 
         [Parameter(
+            Position = 0,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = SetByResourceIdParameterSet,
@@ -68,6 +59,7 @@ namespace Microsoft.Azure.Commands.HDInsight
         public string ResourceId { get; set; }
 
         [Parameter(
+            Position = 0,
             Mandatory = true,
             ValueFromPipeline = true,
             ParameterSetName = SetByInputObjectParameterSet,
@@ -76,11 +68,19 @@ namespace Microsoft.Azure.Commands.HDInsight
         public AzureHDInsightCluster InputObject { get; set; }
 
         [Parameter(
-            Position = 4,
             Mandatory = true,
-            HelpMessage = "Gets or sets the name of the resource group.")]
-        [ResourceGroupCompleter]
-        public string ResourceGroupName { get; set; }
+            HelpMessage = "Gets or sets the encryption key name.")]
+        public string EncryptionKeyName { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            HelpMessage = "Gets or sets the encryption key version.")]
+        public string EncryptionKeyVersion { get; set; }
+
+        [Parameter(
+            Mandatory = true,
+            HelpMessage = "Gets or sets the encryption vault uri.")]
+        public string EncryptionVaultUri { get; set; }
 
         #endregion
 
@@ -89,19 +89,19 @@ namespace Microsoft.Azure.Commands.HDInsight
             if (this.IsParameterBound(c => c.ResourceId))
             {
                 var resourceIdentifier = new ResourceIdentifier(ResourceId);
-                this.ClusterName = resourceIdentifier.ResourceName;
+                this.Name = resourceIdentifier.ResourceName;
                 this.ResourceGroupName = resourceIdentifier.ResourceGroupName;
             }
 
             if (this.IsParameterBound(c => c.InputObject))
             {
-                this.ClusterName = this.InputObject.Name;
+                this.Name = this.InputObject.Name;
                 this.ResourceGroupName = this.InputObject.ResourceGroup;
             }
 
             if (ResourceGroupName == null)
             {
-                ResourceGroupName = GetResourceGroupByAccountName(ClusterName);
+                ResourceGroupName = GetResourceGroupByAccountName(Name);
             }
 
             var rotateParams = new ClusterDiskEncryptionParameters
@@ -111,9 +111,9 @@ namespace Microsoft.Azure.Commands.HDInsight
                 VaultUri = EncryptionVaultUri
             };
 
-            HDInsightManagementClient.RotateDiskEncryptionKey(ResourceGroupName, ClusterName, rotateParams);
+            HDInsightManagementClient.RotateDiskEncryptionKey(ResourceGroupName, Name, rotateParams);
 
-            var cluster = HDInsightManagementClient.GetCluster(ResourceGroupName, ClusterName);
+            var cluster = HDInsightManagementClient.GetCluster(ResourceGroupName, Name);
             if (cluster != null)
             {
                 WriteObject(new AzureHDInsightCluster(cluster.First()));

@@ -90,7 +90,7 @@ Removes the specified HDInsight cluster from the current subscription.
 Removes an persisted script action from an HDInsight cluster.
 
 ### [Set-AzHDInsightClusterDiskEncryptionKey](Set-AzHDInsightClusterDiskEncryptionKey.md)
-Rotate the disk encryption key of the specified HDInsight cluster.
+Sets the disk encryption key of the specified HDInsight cluster.
 
 ### [Set-AzHDInsightClusterSize](Set-AzHDInsightClusterSize.md)
 Sets the number of Worker nodes in a specified cluster.
